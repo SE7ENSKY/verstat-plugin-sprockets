@@ -1,0 +1,7 @@
+{
+  "name": "verstat-plugin-sprockets",
+  "version": "1.0.0",
+  "dependencies": {
+    "async": "~0.2.9"
+  }
+}
