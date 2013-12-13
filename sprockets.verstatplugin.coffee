@@ -9,16 +9,14 @@ module.exports = (next) ->
 			switch command
 				when "require", "require_tree", "include", "include_tree"
 					requiredFiles = if command in ["require", "include"]
-						@files.findAll
+						@queryFiles
 							filename: arg + file.extname
 							id: $ne: file.id
-						.toJSON()
 					else
-						@files.findAll
+						@queryFiles
 							extname: file.extname
 							fullname: $startsWith: arg
 							id: $ne: file.id
-						.toJSON()
 
 					@depends file, requiredFiles
 
@@ -34,6 +32,7 @@ module.exports = (next) ->
 	@postprocessor 'sprockets',
 		priority: -100
 		postprocess: (file, donePostprocessor) =>
+			return donePostprocessor() if file.raw
 			if file.srcExtname in ['.css', '.js'] and directives = file.source.match new RegExp '/\\*=\\s*.+\\s*\\*/', 'g'
 				source = file.source
 				async.eachSeries directives, (directiveString, doneDirective) =>
