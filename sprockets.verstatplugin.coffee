@@ -39,7 +39,7 @@ module.exports = (next) ->
 					m = directiveString.match new RegExp '^/\\*=\\s*(.+)\\s*\\*/$'
 					processDirective file, m[1].replace(///^\s+///, '').replace(///\s+$///, ''), (err, result) =>
 						if err then doneDirective err else
-							source = source.replace directiveString, result
+							source = source.split(directiveString).join(result) # don't use String.replace! (http://epeleg.blogspot.com/2010/07/beware-of-javascript-stringreplace.html)
 							doneDirective()
 				, (err) =>
 					if err then donePostprocessor err else
